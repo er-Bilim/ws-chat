@@ -4,7 +4,7 @@ import type { Express, Request, Response } from 'express';
 import { PORT } from './constants/constants.ts';
 import { createServer } from 'http';
 import cors from 'cors';
-import initWebsocket from './ws/chat/server.ts';
+import initWebsocket from './ws/server.ts';
 import mongoose from 'mongoose';
 import config from './config.ts';
 import apiRoute from './routes/api.route.ts';

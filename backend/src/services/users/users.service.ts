@@ -1,5 +1,10 @@
-import type { HydratedDocument, ObjectId } from 'mongoose';
-import type { IUser, IUserReg, IUserSave } from '../../types/user.types.ts';
+import type { HydratedDocument } from 'mongoose';
+import type {
+  IUser,
+  IUserReg,
+  IUserSave,
+  IUserSend,
+} from '../../types/user.types.ts';
 import User from '../../model/user/User.ts';
 import jwt from 'jsonwebtoken';
 import config from '../../config.ts';
@@ -18,9 +23,7 @@ interface IUsersService {
     isMatch: boolean;
   }>;
   logout: (user: HydratedDocument<IUser>) => Promise<void>;
-  getUserByRefreshToken: (
-    accessToken: string,
-  ) => Promise<HydratedDocument<IUser> | null>;
+  getUserByRefreshToken: (accessToken: string) => Promise<IUserSend | null>;
   generateUserAccessToken: (user_id: string) => Promise<string | null>;
 }
 
@@ -73,13 +76,20 @@ const UsersService: IUsersService = {
     await user.save();
   },
 
-  async getUserByRefreshToken(accessToken) {
-    const decoded = jwt.verify(accessToken, config.accessJWTSecret) as {
-      _id: string;
-    };
+  async getUserByRefreshToken(refreshToken) {
+    try {
+      const decoded = jwt.verify(refreshToken, config.refreshJWTSecret) as {
+        _id: string;
+      };
 
-    const user = await User.findOne({ _id: decoded._id });
-    return user;
+      const user = await User.findOne({
+        _id: decoded._id,
+        refreshToken,
+      });
+      return user as IUser | null;
+    } catch (error) {
+      return null;
+    }
   },
 
   async generateUserAccessToken(user_id) {
