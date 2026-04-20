@@ -19,11 +19,11 @@
 ## 📡 API & Socket Overview
 
 ### HTTP Routes
+
 - `POST /users` — Registration.
 - `POST /users/sessions` — Login.
 
 ### WebSocket Messages
-
 
 ## ⚙️ Features
 
@@ -35,7 +35,17 @@
 
 ## 🚀 Launch
 
+### 1. Environment Configuration
+
+Create a `.env` file in the `backend` directory:
+
+```env
+ACCESS_SECRET_JWT=''
+REFRESH_SECRET_JWT=''
+```
+
 ```bash
 # Backend & Frontend
 npm install
 npm run dev
+```
