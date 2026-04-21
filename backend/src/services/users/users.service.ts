@@ -23,7 +23,8 @@ interface IUsersService {
     isMatch: boolean;
   }>;
   logout: (user: HydratedDocument<IUser>) => Promise<void>;
-  getUserByRefreshToken: (accessToken: string) => Promise<IUserSend | null>;
+  getUserByRefreshToken: (refreshToken: string) => Promise<IUserSend | null>;
+  getUserByAccessToken: (accessToken: string) => Promise<IUserSend | null>;
   generateUserAccessToken: (user_id: string) => Promise<string | null>;
 }
 
@@ -86,6 +87,22 @@ const UsersService: IUsersService = {
         _id: decoded._id,
         refreshToken,
       });
+      return user as IUser | null;
+    } catch (error) {
+      return null;
+    }
+  },
+
+  async getUserByAccessToken(accessToken) {
+    try {
+      const decoded = jwt.verify(accessToken, config.accessJWTSecret) as {
+        _id: string;
+      };
+
+      const user = await User.findOne({
+        _id: decoded._id,
+      });
+
       return user as IUser | null;
     } catch (error) {
       return null;

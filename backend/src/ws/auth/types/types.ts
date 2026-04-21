@@ -1,5 +1,7 @@
+import type { IUserSend } from '../../../types/user.types.ts';
+
 export interface IAuthData {
-  refreshToken: string;
+  user: IUserSend;
 }
 
 export interface IIncomingDataAuth {

@@ -1,4 +1,4 @@
-import { Model, model, Schema, type HydratedDocument } from 'mongoose';
+import { Document, Model, model, Schema, type HydratedDocument } from 'mongoose';
 import type { IUser } from '../../types/user.types.ts';
 import type { UserMethods } from './userModel.types.ts';
 import regex from './regex/regex.ts';
@@ -102,6 +102,15 @@ UserSchema.methods.generateAccessToken = function () {
 
   return accessToken;
 };
+
+UserSchema.path('username').validate({
+  validator: async function (this: Document, username) {
+    if (!this.isModified('username')) return true;
+    const user = await User.exists({ username });
+    return !user;
+  },
+  message: 'User already exists',
+});
 
 const User = model('User', UserSchema);
 
