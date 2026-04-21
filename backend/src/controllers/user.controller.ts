@@ -50,7 +50,7 @@ const UsersController: IUsersController = {
       const { user, refreshToken, accessToken, isMatch } =
         await UsersService.authentication(username, password);
 
-      if (!user || !refreshToken || !accessToken) {
+      if (!user) {
         return res.status(404).json({
           error: 'User is not found',
         });
@@ -60,6 +60,7 @@ const UsersController: IUsersController = {
         return res.status(401).json({ error: 'Password is incorrect' });
       }
 
+      if (!refreshToken || !accessToken) return;
       setCookieToken(res, 'refreshToken', refreshToken, WEEK);
       setCookieToken(res, 'accessToken', accessToken, MINUTES_15);
 
