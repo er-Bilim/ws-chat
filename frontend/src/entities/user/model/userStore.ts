@@ -5,11 +5,14 @@ import type { IGlobalError } from '../../../shared/types/error.types';
 
 interface IUserState {
   user: IUser | null;
+  users: IUser[];
   isAuth: boolean;
   loading: boolean;
   error: IGlobalError | null;
   actions: {
     setUser: (user: IUser) => void;
+    setUsers: (users: IUser[]) => void;
+    addUser: (user: IUser) => void;
     clearUser: () => void;
     setError: (error: IGlobalError | null) => void;
     setLoading: (loading: boolean) => void;
@@ -21,6 +24,7 @@ export const useUserStore = create<IUserState>()(
     persist(
       (set) => ({
         user: null,
+        users: [],
         isAuth: false,
         loading: false,
         error: null,
@@ -31,6 +35,18 @@ export const useUserStore = create<IUserState>()(
               isAuth: true,
             });
           },
+
+          setUsers(users) {
+            set({
+              users,
+            });
+          },
+
+          addUser: (user) =>
+            set((state) => {
+              if (state.users.some((user) => user._id === user._id)) return state;
+              return { users: [...state.users, user] };
+            }),
 
           clearUser() {
             set({

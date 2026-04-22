@@ -8,8 +8,7 @@ interface IUserAvatar {
 }
 
 const UserAvatar: FC<IUserAvatar> = ({ avatarURL, userID }) => {
-  console.log(userID);
-
+  
   const indexAvatarPlaceholder: number = Number(userID.at(-2));
 
   const avatarSrc: string = avatarURL

@@ -1,3 +1,4 @@
+import AuthWS from '@/shared/lib/ws/auth/authWS';
 import { useUserActions } from '@entities/user/model/userStore';
 
 const useLogout = () => {
@@ -6,6 +7,7 @@ const useLogout = () => {
   return async () => {
     try {
       setLoading(true);
+      AuthWS.closeWS();
       clearUser();
     } catch (error) {
       console.error(error);

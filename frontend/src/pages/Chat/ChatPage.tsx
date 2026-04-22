@@ -1,10 +1,11 @@
-import React from 'react';
+import OnlineUsers from '@/widgets/onlineUsers/OnlineUsers';
+import Box from '@mui/material/Box';
 
 const ChatPage = () => {
   return (
-    <div>
-      
-    </div>
+    <Box>
+      <OnlineUsers/>
+    </Box>
   );
 };
 
