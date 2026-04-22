@@ -52,6 +52,18 @@ const initWebsocket = (server: Server) => {
             payload: allOnlineUsers,
           }),
         );
+
+        const connectedUsers = {
+          type: 'USER_CONNECTED',
+          payload: user,
+        };
+
+        wsLogin.clients.forEach((client) => {
+          if (ws !== client && client.readyState === WebSocket.OPEN) {
+            client.send(JSON.stringify(connectedUsers));
+          }
+        });
+        
       } catch (error) {
         ws.close(1011, 'Internal server error');
       }
