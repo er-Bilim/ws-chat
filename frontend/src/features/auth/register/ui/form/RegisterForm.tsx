@@ -39,7 +39,7 @@ const RegisterForm = () => {
   const onChangeFileHandler = (event: ChangeEvent<HTMLInputElement>) => {
     const { name, files } = event.target;
 
-    if (files && files[0] && name === 'image') {
+    if (files && files[0] && name === 'avatar') {
       setValue(name, files[0]);
     }
   };
@@ -115,10 +115,10 @@ const RegisterForm = () => {
           >
             <FileInput
               label="Artist Photo"
-              {...register('image')}
+              {...register('avatar')}
               onChange={onChangeFileHandler}
             />
-            {errors.image && <p>{errors.image.message}</p>}
+            {errors.avatar && <p>{errors.avatar.message}</p>}
           </Box>
         </Box>
 
@@ -141,7 +141,7 @@ const RegisterForm = () => {
               label="Password"
               variant="outlined"
               type="password"
-              autoComplete='password'
+              autoComplete="password"
               {...register('password')}
               sx={{
                 width: '100%',

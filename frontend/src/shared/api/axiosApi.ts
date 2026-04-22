@@ -1,16 +1,16 @@
 import axios from 'axios';
-import { API_URL, HTTP_PROTOCOL } from '../constants/constants';
 import useLogout from '@/features/auth/logout/model/useLogout';
+import { API_URL } from '../constants/constants';
 
 const axiosApi = axios.create({
-  baseURL: `${HTTP_PROTOCOL}${API_URL}/api`,
+  baseURL: `${API_URL}/api`,
 });
 
 axiosApi.defaults.withCredentials = true;
 
 const logoutAndRedirect = async () => {
   try {
-    await axios.delete(`${HTTP_PROTOCOL}${axiosApi}/api/users/sessions`, {
+    await axios.delete(`${API_URL}/api/users/sessions`, {
       withCredentials: true,
       timeout: 2000,
     });
@@ -46,7 +46,7 @@ axiosApi.interceptors.response.use(
 
       try {
         await axios.post(
-          `${HTTP_PROTOCOL}${API_URL}/api/users/token`,
+          `${API_URL}/api/users/token`,
           {},
           { withCredentials: true },
         );

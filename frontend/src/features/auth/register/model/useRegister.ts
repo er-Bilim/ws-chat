@@ -9,9 +9,21 @@ const useRegister = () => {
   return async (dataRegister: IRegister) => {
     try {
       setLoading(true);
+      const formData = new FormData();
+
+      const keys = Object.keys(dataRegister) as (keyof IRegister)[];
+
+      keys.forEach((key) => {
+        const value = dataRegister[key];
+
+        if (value) {
+          formData.append(key, value);
+        }
+      });
+
       const { data } = await axiosApi.post<{ user: IUser; message: string }>(
         `/users`,
-        dataRegister,
+        formData,
       );
       toast.success(data.message);
       setUser(data.user);

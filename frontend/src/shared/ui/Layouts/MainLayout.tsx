@@ -1,11 +1,15 @@
+import ChatSidebar from '@/widgets/chatSidebar/ChatSidebar';
 import Box from '@mui/material/Box';
-import type { FC, PropsWithChildren } from 'react';
+import { Outlet } from 'react-router-dom';
 
-const MainLayout: FC<PropsWithChildren> = ({ children }) => {
+const MainLayout = () => {
   return (
     <>
-      <Box sx={{ flexGrow: 1 }} component={'main'}>
-        {children}
+      <Box sx={{ display: 'flex', flexDirection: 'row' }} component={'main'}>
+        <ChatSidebar />
+        <Box component={'main'}>
+          <Outlet />
+        </Box>
       </Box>
     </>
   );

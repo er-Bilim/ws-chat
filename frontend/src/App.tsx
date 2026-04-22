@@ -11,35 +11,34 @@ const App = () => {
 
   return (
     <>
-      <MainLayout>
-        <Routes>
-          <Route
-            path="/"
-            index
-            element={
-              <ProtectedRouter isAuth={isAuth} isNew={true}>
-                <ChatPage />
-              </ProtectedRouter>
-            }
-          />
-          <Route
-            path="/signup"
-            element={
-              <ProtectedRouter isAuth={!isAuth} isNew={false}>
-                <RegisterPage />
-              </ProtectedRouter>
-            }
-          />
-          <Route
-            path="/login"
-            element={
-              <ProtectedRouter isAuth={!isAuth} isNew={false}>
-                <LoginPage />
-              </ProtectedRouter>
-            }
-          />
-        </Routes>
-      </MainLayout>
+      <Routes>
+        <Route
+          element={
+            <ProtectedRouter isAuth={isAuth} isNew={true}>
+              <MainLayout />
+            </ProtectedRouter>
+          }
+        >
+          <Route path="/" element={<ChatPage />} />
+        </Route>
+
+        <Route
+          path="/signup"
+          element={
+            <ProtectedRouter isAuth={!isAuth} isNew={false}>
+              <RegisterPage />
+            </ProtectedRouter>
+          }
+        />
+        <Route
+          path="/login"
+          element={
+            <ProtectedRouter isAuth={!isAuth} isNew={false}>
+              <LoginPage />
+            </ProtectedRouter>
+          }
+        />
+      </Routes>
     </>
   );
 };

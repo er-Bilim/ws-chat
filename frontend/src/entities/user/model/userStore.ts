@@ -58,6 +58,7 @@ export const useUserStore = create<IUserState>()(
         partialize: (state) => ({
           user: state.user
             ? {
+                _id: state.user._id,
                 avatar: state.user.avatar,
                 username: state.user.username,
                 display_name: state.user.display_name,
