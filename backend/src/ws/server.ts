@@ -36,11 +36,22 @@ const initWebsocket = (server: Server) => {
         ws.user = user;
 
         const wsSendLoginData = {
-          type: 'Login',
+          type: 'LOGIN',
           payload: user,
         };
 
         ws.send(JSON.stringify(wsSendLoginData));
+
+        const allOnlineUsers = Array.from(wsLogin.clients)
+          .map((client) => (client as CustomWebSocket).user)
+          .filter((user) => user !== undefined);
+
+        ws.send(
+          JSON.stringify({
+            type: 'USER_LIST',
+            payload: allOnlineUsers,
+          }),
+        );
       } catch (error) {
         ws.close(1011, 'Internal server error');
       }
