@@ -1,10 +1,24 @@
-import React from 'react';
+import Typography from '@mui/material/Typography';
+import type { FC } from 'react';
 
-const MessageItem = () => {
+interface IMessageItem {
+  message: string;
+}
+
+const MessageItem: FC<IMessageItem> = ({ message }) => {
   return (
-    <div>
-      
-    </div>
+    <Typography
+      sx={{
+        color: 'inherit',
+        fontSize: 'inherit',
+        fontWeight: 'inherit',
+        letterSpacing: 'inherit',
+        writingMode: 'inherit',
+        textOrientation: 'inherit',
+      }}
+    >
+      {message}
+    </Typography>
   );
 };
 

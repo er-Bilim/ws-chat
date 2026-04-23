@@ -57,8 +57,8 @@ const OnlineUsers = () => {
 
     return (
       <>
-        {users.map((client) => (
-          <ChatListItem user={client} ownUserID={user._id} key={client._id} />
+        {users.map((client, index) => (
+          <ChatListItem user={client} ownUserID={user._id} key={client._id + index} />
         ))}
       </>
     );
@@ -67,10 +67,12 @@ const OnlineUsers = () => {
   return (
     <Box
       sx={{
-        width: '350px',
+        minWidth: '600px',
         backgroundColor: red[50],
         height: '100vh',
         padding: 3,
+        borderRight: 4,
+        borderColor: pink[500],
       }}
     >
       <Box

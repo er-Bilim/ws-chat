@@ -2,9 +2,9 @@ import type { IUserSend } from './user.types.ts';
 import mongoose from 'mongoose';
 
 export interface IMessage {
+  _id: string;
   user: IUserSend;
   message: string;
-  datetime: string;
 }
 
 export interface IMessageSave {

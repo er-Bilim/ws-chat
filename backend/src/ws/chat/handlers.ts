@@ -10,15 +10,16 @@ const initChatHandlers = (ws: CustomWebSocket, clients: Set<WebSocket>) => {
 
       switch (decodedMessage.type) {
         case 'SEND':
-          const message = {
-            user: ws.user,
-            message: decodedMessage.payload.message,
-          };
-
-          await MessageService.newMessage({
+          const savedMessage = await MessageService.newMessage({
             user: ws.userID,
             content: decodedMessage.payload.message,
           });
+
+          const message = {
+            _id: savedMessage._id,
+            user: ws.user,
+            content: decodedMessage.payload.message,
+          };
 
           const dataSendMessage = JSON.stringify({
             type: 'NEW',
@@ -26,7 +27,7 @@ const initChatHandlers = (ws: CustomWebSocket, clients: Set<WebSocket>) => {
           });
 
           clients.forEach((client) => {
-            if (client !== ws) {
+            if (client.readyState === 1) {
               client.send(dataSendMessage);
             }
           });

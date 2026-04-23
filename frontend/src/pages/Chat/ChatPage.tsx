@@ -4,9 +4,16 @@ import Box from '@mui/material/Box';
 
 const ChatPage = () => {
   return (
-    <Box>
-      <OnlineUsers/>
-      <ChatMessages/>
+    <Box
+      sx={{
+        width: '100%',
+        display: 'flex',
+        flexDirection: 'row',
+        gap: 3,
+      }}
+    >
+      <OnlineUsers />
+      <ChatMessages />
     </Box>
   );
 };

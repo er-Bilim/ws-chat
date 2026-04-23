@@ -97,7 +97,7 @@ const initWebsocket = (server: Server) => {
         const lastMessages = await MessageService.getLastMessages(30);
         ws.send(
           JSON.stringify({
-            type: 'SEND',
+            type: 'LAST_MESSAGES',
             payload: lastMessages,
           }),
         );
