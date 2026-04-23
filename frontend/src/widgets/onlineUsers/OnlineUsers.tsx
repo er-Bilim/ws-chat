@@ -9,12 +9,15 @@ import { toast } from 'react-toastify';
 
 const OnlineUsers = () => {
   const { users, user } = useUserStore();
-  const { setUsers, addUser } = useUserActions();
+  const { setUsers, addUser, removeUser } = useUserActions();
   const ws = useRef<WebSocket | null>(null);
 
   AuthWS.setWsRef(ws);
   useEffect(() => {
+    let isUnmounted: boolean = false;
     AuthWS.connect((data) => {
+      if (isUnmounted) return;
+
       switch (data.type) {
         case 'LOGIN':
           toast.success(`Hello, ${data.payload.display_name}`);
@@ -25,22 +28,26 @@ const OnlineUsers = () => {
         case 'USER_LIST':
           setUsers(data.payload);
           break;
+        case 'USER_DISCONNECTED':
+          removeUser(data.payload.id);
+          break;
       }
     });
 
     return () => {
-      if (ws.current) {
-        const websocketClose = ws.current;
-        ws.current = null;
+      isUnmounted = true;
 
-        setTimeout(() => {
-          if (
-            websocketClose.readyState === WebSocket.OPEN ||
-            websocketClose.readyState === WebSocket.CONNECTING
-          ) {
-            websocketClose.close();
-          }
-        }, 0);
+      if (ws.current) {
+        const websocket = ws.current;
+
+        if (websocket.readyState === WebSocket.OPEN) {
+          websocket.close();
+        } else {
+          websocket.onopen = () => {
+            websocket.close();
+          };
+        }
+        ws.current = null;
       }
     };
   }, [setUsers, addUser]);

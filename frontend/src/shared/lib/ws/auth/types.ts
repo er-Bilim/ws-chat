@@ -15,4 +15,15 @@ interface ILoggedUsers {
   payload: IUser[];
 }
 
-export type IIncomingDataAuth = IUserLoginAction | ILoggedUser | ILoggedUsers;
+interface ILogoutUser {
+  type: 'USER_DISCONNECTED';
+  payload: {
+    id: string;
+  };
+}
+
+export type IIncomingDataAuth =
+  | IUserLoginAction
+  | ILoggedUser
+  | ILoggedUsers
+  | ILogoutUser;

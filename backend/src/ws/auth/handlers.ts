@@ -1,12 +1,23 @@
 import type { WebSocket } from 'ws';
-import type { IIncomingDataAuth } from './types/types.ts';
+import type { CustomWebSocket } from '../ws.types.ts';
 
 const initLoginHandlers = async (
-  ws: WebSocket,
+  ws: CustomWebSocket,
   clients: Set<WebSocket>,
 ) => {
   ws.on('close', () => {
-    console.log(`Connected clients after disconnect:`, clients.size);
+    console.log(`User ${ws.user?.username} disconnected`);
+
+    const disconnectMessage = JSON.stringify({
+      type: 'USER_DISCONNECTED',
+      payload: { id: ws.userID },
+    });
+
+    clients.forEach((client) => {
+      if (client !== ws && client.readyState === 1) {
+        client.send(disconnectMessage);
+      }
+    });
   });
 
   ws.on('error', console.error);

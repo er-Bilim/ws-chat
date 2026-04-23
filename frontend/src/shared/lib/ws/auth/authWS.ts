@@ -7,6 +7,8 @@ interface IAuthWSState {
   wsRef: RefObject<WebSocket | null> | null;
   reconnectAttempts: number;
   manualClose: boolean;
+  isReconnecting: boolean;
+  reconnectTimer: ReturnType<typeof setTimeout> | null;
   connect: (callback: (state: IIncomingDataAuth) => void) => void;
   handleReconnect: (callback: (state: IIncomingDataAuth) => void) => void;
   closeWS: () => void;
@@ -17,6 +19,8 @@ const AuthWS: IAuthWSState = {
   wsRef: null,
   reconnectAttempts: 0,
   manualClose: false,
+  isReconnecting: false,
+  reconnectTimer: null,
   connect: function (callback) {
     if (!this.wsRef) return;
 
@@ -30,7 +34,9 @@ const AuthWS: IAuthWSState = {
     const websocket = new WebSocket(`${WSS_URL}/login`);
 
     websocket.onopen = () => {
-      AuthWS.reconnectAttempts = 0;
+      this.reconnectAttempts = 0;
+      this.isReconnecting = false;
+      if (this.reconnectTimer) clearTimeout(this.reconnectTimer);
     };
 
     websocket.onmessage = (event) => {
@@ -39,12 +45,13 @@ const AuthWS: IAuthWSState = {
     };
 
     websocket.onclose = (event) => {
-      if (AuthWS.manualClose) {
-        AuthWS.manualClose = false;
+      if (this.manualClose) {
+        this.manualClose = false;
+        this.isReconnecting = false;
         return;
       }
 
-      if (event.code !== 1000) {
+      if (event.code !== 1000 && !this.isReconnecting) {
         toast.warn('Reconnecting');
         this.handleReconnect(callback);
       }
@@ -54,11 +61,18 @@ const AuthWS: IAuthWSState = {
   },
 
   handleReconnect: function (callback: (state: IIncomingDataAuth) => void) {
-    const delay = Math.min(1000 * Math.pow(2, AuthWS.reconnectAttempts), 30000);
+    if (this.isReconnecting) return;
+    this.isReconnecting = true;
 
-    setTimeout(() => {
-      AuthWS.reconnectAttempts++;
-      AuthWS.connect(callback);
+    if (this.reconnectTimer) clearTimeout(this.reconnectTimer);
+
+    const delay = Math.min(1000 * Math.pow(2, this.reconnectAttempts), 30000);
+
+    this.reconnectTimer = setTimeout(() => {
+      this.reconnectTimer = null;
+      this.isReconnecting = false;
+      this.reconnectAttempts++;
+      this.connect(callback);
     }, delay);
   },
 

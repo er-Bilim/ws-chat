@@ -12,8 +12,9 @@ interface IUserState {
   actions: {
     setUser: (user: IUser) => void;
     setUsers: (users: IUser[]) => void;
-    addUser: (user: IUser) => void;
+    addUser: (newUser: IUser) => void;
     clearUser: () => void;
+    removeUser: (userID: string) => void;
     setError: (error: IGlobalError | null) => void;
     setLoading: (loading: boolean) => void;
   };
@@ -42,17 +43,31 @@ export const useUserStore = create<IUserState>()(
             });
           },
 
-          addUser: (user) =>
+          addUser(newUser) {
             set((state) => {
-              if (state.users.some((user) => user._id === user._id)) return state;
-              return { users: [...state.users, user] };
-            }),
+              const isAlreadyInside = state.users.some(
+                (user) => user._id === newUser._id,
+              );
+
+              if (isAlreadyInside) return state;
+
+              return {
+                users: [...state.users, newUser],
+              };
+            });
+          },
 
           clearUser() {
             set({
               user: null,
               isAuth: false,
             });
+          },
+
+          removeUser(userId: string) {
+            set((state) => ({
+              users: state.users.filter((user) => user._id !== userId),
+            }));
           },
 
           setError(error) {

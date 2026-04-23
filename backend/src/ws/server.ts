@@ -63,7 +63,6 @@ const initWebsocket = (server: Server) => {
             client.send(JSON.stringify(connectedUsers));
           }
         });
-        
       } catch (error) {
         ws.close(1011, 'Internal server error');
       }
